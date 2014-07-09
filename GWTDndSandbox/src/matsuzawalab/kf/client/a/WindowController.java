@@ -16,7 +16,7 @@ package matsuzawalab.kf.client.a;
 import com.allen_sauer.gwt.dnd.client.PickupDragController;
 import com.google.gwt.user.client.ui.AbsolutePanel;
 
-final class WindowController {
+final public class WindowController {
 
   private final AbsolutePanel boundaryPanel;
 
@@ -24,7 +24,7 @@ final class WindowController {
 
   private ResizeDragController resizeDragController;
 
-  WindowController(AbsolutePanel boundaryPanel) {
+  public WindowController(AbsolutePanel boundaryPanel) {
     this.boundaryPanel = boundaryPanel;
 
     pickupDragController = new PickupDragController(boundaryPanel, true);
