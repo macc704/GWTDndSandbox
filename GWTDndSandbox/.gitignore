@@ -1,6 +1,8 @@
 /test-classes
 /gwt-unitCache
 
+war/sandbox/
+
 *.class
 
 # Package Files #
