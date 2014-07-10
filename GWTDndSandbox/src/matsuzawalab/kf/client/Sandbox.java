@@ -1,15 +1,28 @@
 package matsuzawalab.kf.client;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import matsuzawalab.kf.client.a.DemoDragHandler;
 import matsuzawalab.kf.client.a.DraggableFactory;
 import matsuzawalab.kf.client.a.WindowController;
 import matsuzawalab.kf.client.a.WindowExample;
 import matsuzawalab.kf.client.a.WindowPanel;
 
+import com.allen_sauer.gwt.dnd.client.DragEndEvent;
+import com.allen_sauer.gwt.dnd.client.DragHandler;
+import com.allen_sauer.gwt.dnd.client.DragStartEvent;
 import com.allen_sauer.gwt.dnd.client.PickupDragController;
+import com.allen_sauer.gwt.dnd.client.VetoDragException;
+import com.allen_sauer.gwt.dnd.client.util.Area;
+import com.allen_sauer.gwt.dnd.client.util.CoordinateArea;
+import com.allen_sauer.gwt.dnd.client.util.CoordinateLocation;
+import com.allen_sauer.gwt.dnd.client.util.Location;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.MouseDownEvent;
+import com.google.gwt.event.dom.client.MouseDownHandler;
 import com.google.gwt.user.client.ui.AbsolutePanel;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Label;
@@ -47,11 +60,11 @@ public class Sandbox implements EntryPoint {
 		boundaryBasePanel = new AbsolutePanel();
 		boundaryBasePanel.addStyleName("demo-main-boundary-panel");
 		mainPanel.add(boundaryBasePanel);
-		
+
 		SimplePanel panel = new SimplePanel();
 		panel.addStyleName("demo-WindowExample");
 		boundaryBasePanel.add(panel);
-		
+
 		boundaryPanel = new AbsolutePanel();
 		boundaryPanel.addStyleName("demo-WindowExample");
 		boundaryPanel.setPixelSize(600, 400);
@@ -73,13 +86,102 @@ public class Sandbox implements EntryPoint {
 
 	public void onModuleLoad2() {
 
+		final List<Widget> registered = new ArrayList<Widget>();
+
+		windowController = new WindowController(boundaryPanel);
+
 		// instantiate the common drag controller used the less specific
 		// examples
 		final PickupDragController pickupDragController = new PickupDragController(
-				boundaryPanel, true);
-		pickupDragController.setBehaviorMultipleSelection(false);
+				boundaryPanel, true) {
 
-		windowController = new WindowController(boundaryPanel);
+			@Override
+			public void makeDraggable(Widget draggable, Widget dragHandle) {
+				super.makeDraggable(draggable, dragHandle);
+				registered.add(draggable);
+			}
+
+			@Override
+			public void makeNotDraggable(Widget draggable) {
+				super.makeNotDraggable(draggable);
+				registered.remove(draggable);
+			}
+		};
+
+		pickupDragController.addDragHandler(new DragHandler() {
+
+			@Override
+			public void onPreviewDragStart(DragStartEvent event)
+					throws VetoDragException {
+			}
+
+			@Override
+			public void onPreviewDragEnd(DragEndEvent event)
+					throws VetoDragException {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void onDragStart(DragStartEvent event) {
+				// System.out.println("drag start2");
+			}
+
+			@Override
+			public void onDragEnd(DragEndEvent event) {
+				// TODO Auto-generated method stub
+
+			}
+		});
+		pickupDragController.setBehaviorMultipleSelection(true);
+		boundaryPanel.addDomHandler(new MouseDownHandler() {
+
+			@Override
+			public void onMouseDown(MouseDownEvent event) {
+				
+				// System.out.println(event.getSource());
+				int mouseX = event.getRelativeX(boundaryPanel.getElement());
+				int mouseY = event.getRelativeY(boundaryPanel.getElement());
+				Location mouseLoc = new CoordinateLocation(mouseX, mouseY);
+				// System.out.println("mouse=" + mouseLoc);
+				Widget w = null;
+//				for (Widget each : registered) {
+//					if (each.getParent() != boundaryPanel) {
+//						System.out.println("not a child of boundaryPanel="
+//								+ each);
+//						continue;
+//					}
+//					int x = boundaryPanel.getWidgetLeft(each);
+//					int y = boundaryPanel.getWidgetTop(each);
+//					int width = each.getOffsetWidth();
+//					int height = each.getOffsetHeight();
+//					Area area = new CoordinateArea(x, y, x + width, y + height);
+//					if (area.intersects(mouseLoc)) {
+//						w = each;
+//					}
+//				}
+				
+				int len = boundaryPanel.getWidgetCount();
+				for(int i=0;i<len;i++){
+					Widget each = boundaryPanel.getWidget(i);
+					int x = boundaryPanel.getWidgetLeft(each);
+					int y = boundaryPanel.getWidgetTop(each);
+					int width = each.getOffsetWidth();
+					int height = each.getOffsetHeight();
+					Area area = new CoordinateArea(x, y, x + width, y + height);
+					if (area.intersects(mouseLoc)) {
+						w = each;
+					}					
+				}
+				
+				// System.out.println("widget=" + w);
+				if (w == null) {
+					pickupDragController.clearSelection();
+				}
+			}
+		}, MouseDownEvent.getType());
+		// boundaryPanel.sinkEvents(eventBitsToAdd);
+
 		// windowController.getPickupDragController().addDragHandler(new
 		// DemoDragHandler(new HTML()));
 
@@ -164,7 +266,7 @@ public class Sandbox implements EntryPoint {
 	}
 
 	protected void openWindow(PickupDragController pickupDragController) {
-		//System.out.println("clicked");
+		// System.out.println("clicked");
 
 		// create the first panel
 		HTML header1 = new HTML("An draggable &amp; resizable panel");

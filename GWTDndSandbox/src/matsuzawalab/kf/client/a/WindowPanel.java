@@ -150,15 +150,16 @@ final public class WindowPanel extends FocusPanel {
 	private Widget westWidget;
 
 	private final WindowController windowController;
-
+	private SimpleDropController drop;
+	private PickupDragController pickupDragController;
 	public WindowPanel(final WindowController windowController,
 			Widget headerWidget, Widget contentWidget,
 			boolean wrapContentInScrollPanel,
 			PickupDragController pickupDragController) {
 		this(windowController, headerWidget, contentWidget,
 				wrapContentInScrollPanel);
-
-		SimpleDropController drop = new SimpleDropController(this) {
+		this.pickupDragController = pickupDragController;
+		 drop = new SimpleDropController(this) {
 			@Override
 			public void onDrop(DragContext context) {
 				System.out.println("drop");
@@ -196,7 +197,8 @@ final public class WindowPanel extends FocusPanel {
 				throw new VetoDragException();
 			}
 		};
-		pickupDragController.registerDropController(drop);
+		this.pickupDragController.
+		registerDropController(drop);
 	}
 
 	public WindowPanel(final WindowController windowController,
@@ -225,6 +227,7 @@ final public class WindowPanel extends FocusPanel {
 			public void onClick(ClickEvent event) {
 				System.out.println("window close button clicked");
 				WindowPanel.this.removeFromParent();
+				pickupDragController.unregisterDropController(drop);
 			}
 		});
 		// Label label = new Label("abc");

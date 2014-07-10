@@ -32,3 +32,16 @@ h1 {
 #closeButton {
   margin: 15px 6px 6px;
 }
+
+/*
+.dragdrop-selected {
+	filter: none;
+	opacity: 1.0;
+	border-type: solid;
+	border-width: 5px;
+}*/
+
+/*.dragdrop-selected,.dragdrop-dragging,.dragdrop-proxy {
+	filter: alpha(opacity \= 30);
+	opacity: 0.3;
+}*/
