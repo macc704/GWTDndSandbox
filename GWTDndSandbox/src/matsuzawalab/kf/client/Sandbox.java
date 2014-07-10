@@ -21,6 +21,8 @@ import com.allen_sauer.gwt.dnd.client.util.Location;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.NativeEvent;
+import com.google.gwt.dom.client.Style.Float;
+import com.google.gwt.dom.client.Style.Overflow;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.ContextMenuEvent;
@@ -33,7 +35,11 @@ import com.google.gwt.event.dom.client.MouseUpEvent;
 import com.google.gwt.event.dom.client.MouseUpHandler;
 import com.google.gwt.user.client.ui.AbsolutePanel;
 import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.FocusPanel;
+import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.HTMLPanel;
+import com.google.gwt.user.client.ui.InlineLabel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.MenuBar;
 import com.google.gwt.user.client.ui.MenuItem;
@@ -326,7 +332,8 @@ public class Sandbox implements EntryPoint {
 			@Override
 			public void onMouseUp(MouseUpEvent event) {
 				System.out.println("up");
-				boolean click = event.getClientX() == x && event.getClientY() == y;
+				boolean click = event.getClientX() == x
+						&& event.getClientY() == y;
 				System.out.println(click);
 				int button = event.getNativeButton();
 				if (button == NativeEvent.BUTTON_LEFT && click) {
@@ -380,10 +387,79 @@ public class Sandbox implements EntryPoint {
 	}
 
 	protected void openWindow(PickupDragController pickupDragController) {
+		openWindow3(pickupDragController);
+	}
+	
+	protected void openWindow3(PickupDragController pickupDragController) {
+		HTML html1 = new HTML(makeText().replaceAll("\n", "<br>\n"));
+		html1.addStyleName("demo-resize-html");
+		WindowPanel windowPanel1 = new WindowPanel(windowController, "abcde this is title",
+				html1, true, pickupDragController);
+		boundaryPanel.add(windowPanel1, 20, 20);
+	}
+
+	protected void openWindow2(PickupDragController pickupDragController) {
+
+		FocusPanel header1 = new FocusPanel();
+		Grid grid = new Grid(1, 2);		
+		header1.add(grid);
+		
+		Label l = new Label("long title long title ");
+		l.getElement().getStyle().setOverflow(Overflow.HIDDEN);
+		grid.setWidget(0, 0, l);
+		
+		Button b = new Button("x");
+		b.setSize("23px", "23px");
+		grid.setWidget(0, 1, b);
+		grid.getColumnFormatter().setWidth(0, "100%");
+		
+		
+		HTML html1 = new HTML(makeText().replaceAll("\n", "<br>\n"));
+		html1.addStyleName("demo-resize-html");
+		WindowPanel windowPanel1 = new WindowPanel(windowController, header1,
+				html1, true, pickupDragController);
+		boundaryPanel.add(windowPanel1, 20, 20);
+	}
+
+	protected void openWindow1(PickupDragController pickupDragController) {
 		// System.out.println("clicked");
 
 		// create the first panel
-		HTML header1 = new HTML("An draggable &amp; resizable panel");
+
+		// HTML header1 = new HTML("An draggable &amp; resizable panel");
+		// header1.add
+		FocusPanel header1 = new FocusPanel();
+		HTMLPanel headerContent = new HTMLPanel("");
+		// headerContent.add(new Label("You can resize "));
+		// headerContent.add(Element.create
+		// FlowPa
+		InlineLabel title = new InlineLabel(
+				"This is title This is title This is title This is title This is title");
+		headerContent.add(title);
+		title.getElement().getStyle().setOverflow(Overflow.HIDDEN);
+		Button b = new Button("x");
+		b.addClickHandler(new ClickHandler() {
+
+			@Override
+			public void onClick(ClickEvent event) {
+				System.out.println("button clicked");
+			}
+		});
+		headerContent.setWidth("200px");
+		// headerContent.setHeight("27px");
+		b.addMouseDownHandler(new MouseDownHandler() {
+
+			@Override
+			public void onMouseDown(MouseDownEvent event) {
+
+				System.out.println("mouse down");
+			}
+		});
+		headerContent.add(b);
+		// b.getElement().getStyle().setRight(0, Unit.PT);
+		// b.getElement().setAttribute("style", "float: right;");
+		b.getElement().getStyle().setFloat(Float.RIGHT);
+		header1.add(headerContent);
 		HTML html1 = new HTML(makeText().replaceAll("\n", "<br>\n"));
 		html1.addStyleName("demo-resize-html");
 		WindowPanel windowPanel1 = new WindowPanel(windowController, header1,

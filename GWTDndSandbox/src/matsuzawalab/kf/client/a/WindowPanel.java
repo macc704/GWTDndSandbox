@@ -16,19 +16,22 @@ package matsuzawalab.kf.client.a;
 import com.allen_sauer.gwt.dnd.client.DragContext;
 import com.allen_sauer.gwt.dnd.client.PickupDragController;
 import com.allen_sauer.gwt.dnd.client.VetoDragException;
+import com.allen_sauer.gwt.dnd.client.drop.DropController;
 import com.allen_sauer.gwt.dnd.client.drop.SimpleDropController;
 import com.allen_sauer.gwt.dnd.client.util.Location;
 import com.allen_sauer.gwt.dnd.client.util.WidgetLocation;
-import com.google.gwt.dom.client.Style.BorderStyle;
-import com.google.gwt.dom.client.Style.Cursor;
-import com.google.gwt.dom.client.Style.Unit;
+import com.google.gwt.dom.client.Style.Overflow;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.MouseDownEvent;
+import com.google.gwt.event.dom.client.MouseDownHandler;
+import com.google.gwt.event.dom.client.MouseUpEvent;
+import com.google.gwt.event.dom.client.MouseUpHandler;
 import com.google.gwt.user.client.ui.AbsolutePanel;
 import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.FocusPanel;
 import com.google.gwt.user.client.ui.Grid;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -119,7 +122,7 @@ final public class WindowPanel extends FocusPanel {
 	public static final DirectionConstant WEST = new DirectionConstant(
 			DIRECTION_WEST, "w");
 
-	private static final int BORDER_THICKNESS = 5;
+	private static final int BORDER_THICKNESS = 4;
 
 	private static final String CSS_DEMO_RESIZE_EDGE = "demo-resize-edge";
 
@@ -137,7 +140,7 @@ final public class WindowPanel extends FocusPanel {
 
 	private Grid grid = new Grid(3, 3);
 
-	private final FocusPanel headerContainer;
+	private FocusPanel headerContainer;
 
 	private Widget headerWidget;
 
@@ -149,59 +152,83 @@ final public class WindowPanel extends FocusPanel {
 
 	private Widget westWidget;
 
-	private final WindowController windowController;
-	private SimpleDropController drop;
-	private PickupDragController pickupDragController;
-	public WindowPanel(final WindowController windowController,
-			Widget headerWidget, Widget contentWidget,
-			boolean wrapContentInScrollPanel,
-			PickupDragController pickupDragController) {
-		this(windowController, headerWidget, contentWidget,
-				wrapContentInScrollPanel);
-		this.pickupDragController = pickupDragController;
-		 drop = new SimpleDropController(this) {
+	private WindowController windowController;
+
+	public WindowPanel(WindowController windowController, Widget headerWidget,
+			Widget contentWidget, boolean wrapContentInScrollPanel,
+			final PickupDragController pickupDragController) {
+		throw new RuntimeException("not implemented");
+	}
+
+	public WindowPanel(WindowController windowController, String title,
+			Widget contentWidget, boolean wrapContentInScrollPanel,
+			final PickupDragController pickupDragController) {
+
+		final DropController drop = new SimpleDropController(this) {
 			@Override
 			public void onDrop(DragContext context) {
-				System.out.println("drop");
+				System.out.println("drop=" + context.draggable);
 			}
 
 			@Override
 			public void onEnter(DragContext context) {
-				getDropTarget().getElement().getStyle()
-						.setBorderStyle(BorderStyle.SOLID);
-				getDropTarget().getElement().getStyle()
-						.setBorderWidth(3, Unit.PT);
-				getDropTarget().getElement().getStyle().setBorderColor("red");
-				getDropTarget().getElement().getStyle()
-						.setCursor(Cursor.CROSSHAIR);
+				getDropTarget().addStyleName("dragdrop-droptarget");
 				super.onEnter(context);
 			}
 
 			@Override
 			public void onLeave(DragContext context) {
-				getDropTarget().getElement().getStyle().clearBorderColor();
-				getDropTarget().getElement().getStyle().clearBorderWidth();
-				getDropTarget().getElement().getStyle().clearBorderStyle();
-				getDropTarget().getElement().getStyle().clearCursor();
+				getDropTarget().removeStyleName("dragdrop-droptarget");
 				super.onLeave(context);
 			}
 
 			@Override
 			public void onPreviewDrop(DragContext context)
 					throws VetoDragException {
-//				DialogBox dialog = new DialogBox();
-//				dialog.setModal(true);
-//				dialog.setWidget(new Button("xx"));
-//				dialog.setSize("100px", "100px");
-//				dialog.show();
-				throw new VetoDragException();
+				// throw new VetoDragException();
 			}
 		};
-		this.pickupDragController.
-		registerDropController(drop);
+
+		Grid grid = new Grid(1, 2);
+		this.headerWidget = grid;
+
+		Label l = new Label("long title long title ");
+		l.getElement().getStyle().setOverflow(Overflow.HIDDEN);
+		grid.setWidget(0, 0, l);
+
+		Button b = new Button("x");
+		b.setSize("23px", "23px");
+		grid.setWidget(0, 1, b);
+		grid.getColumnFormatter().setWidth(0, "100%");
+
+		b.addMouseDownHandler(new MouseDownHandler() {
+			@Override
+			public void onMouseDown(MouseDownEvent event) {
+				event.stopPropagation();
+			}
+		});
+
+		b.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				WindowPanel.this.removeFromParent();
+				pickupDragController.unregisterDropController(drop);
+			}
+		});
+
+		pickupDragController.registerDropController(drop);
+
+		initialize(windowController, grid, contentWidget,
+				wrapContentInScrollPanel);
 	}
 
-	public WindowPanel(final WindowController windowController,
+	public WindowPanel(WindowController windowController, Widget headerWidget,
+			Widget contentWidget, boolean wrapContentInScrollPanel) {
+		initialize(windowController, headerWidget, contentWidget,
+				wrapContentInScrollPanel);
+	}
+
+	private void initialize(final WindowController windowController,
 			Widget headerWidget, Widget contentWidget,
 			boolean wrapContentInScrollPanel) {
 		this.windowController = windowController;
@@ -213,31 +240,10 @@ final public class WindowPanel extends FocusPanel {
 
 		headerContainer = new FocusPanel();
 		headerContainer.addStyleName(CSS_DEMO_RESIZE_PANEL_HEADER);
+		headerContainer.add(headerWidget);
 
-		// // AbsolutePanel header = new AbsolutePanel();
-		FlowPanel header = new FlowPanel();
-		this.headerWidget = header;
-		// headerWidget = new HTML("ahoge");
-		header.add(headerWidget);
-		Button b = new Button("x");
-		header.add(b);
-		b.addClickHandler(new ClickHandler() {
-
-			@Override
-			public void onClick(ClickEvent event) {
-				System.out.println("window close button clicked");
-				WindowPanel.this.removeFromParent();
-				pickupDragController.unregisterDropController(drop);
-			}
-		});
-		// Label label = new Label("abc");
-		// label.setSize("100px", "27px");
-
-		headerContainer.add(this.headerWidget);
-
-		// windowController.getPickupDragController().makeDraggable(this,headerContainer);
 		windowController.getPickupDragController().makeDraggable(this,
-				headerWidget);
+				headerContainer);
 
 		addClickHandler(new ClickHandler() {
 			@Override
@@ -274,7 +280,6 @@ final public class WindowPanel extends FocusPanel {
 		setupCell(2, 0, SOUTH_WEST);
 		southWidget = setupCell(2, 1, SOUTH);
 		setupCell(2, 2, SOUTH_EAST);
-
 	}
 
 	public int getContentHeight() {
@@ -310,10 +315,17 @@ final public class WindowPanel extends FocusPanel {
 					+ headerHeight);
 		}
 		contentOrScrollPanelWidget.setPixelSize(contentWidth, contentHeight);
+
+		// System.out.println("resize!" + width + "," + height);
+		width = width > 20 ? width : 20;
+		headerWidget.setSize(width + "px", "27px");
+		headerWidget.setLayoutData(null);
 	}
 
 	private Widget setupCell(int row, int col, DirectionConstant direction) {
 		final FocusPanel widget = new FocusPanel();
+		// final SimplePanel widget = new SimplePanel();
+		// final HTMLPanel widget = new HTMLPanel("");
 		widget.setPixelSize(BORDER_THICKNESS, BORDER_THICKNESS);
 		grid.setWidget(row, col, widget);
 		windowController.getResizeDragController().makeDraggable(widget,
