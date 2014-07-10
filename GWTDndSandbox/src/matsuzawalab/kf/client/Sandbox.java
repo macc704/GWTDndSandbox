@@ -19,13 +19,25 @@ import com.allen_sauer.gwt.dnd.client.util.CoordinateArea;
 import com.allen_sauer.gwt.dnd.client.util.CoordinateLocation;
 import com.allen_sauer.gwt.dnd.client.util.Location;
 import com.google.gwt.core.client.EntryPoint;
+import com.google.gwt.core.client.Scheduler.ScheduledCommand;
+import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.ContextMenuEvent;
+import com.google.gwt.event.dom.client.ContextMenuHandler;
 import com.google.gwt.event.dom.client.MouseDownEvent;
 import com.google.gwt.event.dom.client.MouseDownHandler;
+import com.google.gwt.event.dom.client.MouseMoveEvent;
+import com.google.gwt.event.dom.client.MouseMoveHandler;
+import com.google.gwt.event.dom.client.MouseUpEvent;
+import com.google.gwt.event.dom.client.MouseUpHandler;
 import com.google.gwt.user.client.ui.AbsolutePanel;
+import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.MenuBar;
+import com.google.gwt.user.client.ui.MenuItem;
+import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -138,31 +150,31 @@ public class Sandbox implements EntryPoint {
 
 			@Override
 			public void onMouseDown(MouseDownEvent event) {
-				
+
 				// System.out.println(event.getSource());
 				int mouseX = event.getRelativeX(boundaryPanel.getElement());
 				int mouseY = event.getRelativeY(boundaryPanel.getElement());
 				Location mouseLoc = new CoordinateLocation(mouseX, mouseY);
 				// System.out.println("mouse=" + mouseLoc);
 				Widget w = null;
-//				for (Widget each : registered) {
-//					if (each.getParent() != boundaryPanel) {
-//						System.out.println("not a child of boundaryPanel="
-//								+ each);
-//						continue;
-//					}
-//					int x = boundaryPanel.getWidgetLeft(each);
-//					int y = boundaryPanel.getWidgetTop(each);
-//					int width = each.getOffsetWidth();
-//					int height = each.getOffsetHeight();
-//					Area area = new CoordinateArea(x, y, x + width, y + height);
-//					if (area.intersects(mouseLoc)) {
-//						w = each;
-//					}
-//				}
-				
+				// for (Widget each : registered) {
+				// if (each.getParent() != boundaryPanel) {
+				// System.out.println("not a child of boundaryPanel="
+				// + each);
+				// continue;
+				// }
+				// int x = boundaryPanel.getWidgetLeft(each);
+				// int y = boundaryPanel.getWidgetTop(each);
+				// int width = each.getOffsetWidth();
+				// int height = each.getOffsetHeight();
+				// Area area = new CoordinateArea(x, y, x + width, y + height);
+				// if (area.intersects(mouseLoc)) {
+				// w = each;
+				// }
+				// }
+
 				int len = boundaryPanel.getWidgetCount();
-				for(int i=0;i<len;i++){
+				for (int i = 0; i < len; i++) {
 					Widget each = boundaryPanel.getWidget(i);
 					int x = boundaryPanel.getWidgetLeft(each);
 					int y = boundaryPanel.getWidgetTop(each);
@@ -171,9 +183,9 @@ public class Sandbox implements EntryPoint {
 					Area area = new CoordinateArea(x, y, x + width, y + height);
 					if (area.intersects(mouseLoc)) {
 						w = each;
-					}					
+					}
 				}
-				
+
 				// System.out.println("widget=" + w);
 				if (w == null) {
 					pickupDragController.clearSelection();
@@ -199,6 +211,7 @@ public class Sandbox implements EntryPoint {
 		// AbsolutePanel panel = new AbsolutePanel();
 		// Button panel = new Button("aa");
 		// HTMLPanel panel = new HTMLPanel("<html></html>");
+		// AbsolutePanel panel = new AbsolutePanel();
 		AbsolutePanel panel = new AbsolutePanel();
 		panel.setSize("100px", "27px");
 		panel.getElement().getStyle().setProperty("borderStyle", "solid");
@@ -219,9 +232,44 @@ public class Sandbox implements EntryPoint {
 		onlabel.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				openWindow(pickupDragController);
+				System.out.println("label clicked");
+				// openWindow(pickupDragController);
 			}
 		});
+
+		panel.addDomHandler(new ContextMenuHandler() {
+			public void onContextMenu(ContextMenuEvent event) {
+				int x = event.getNativeEvent().getClientX();
+				int y = event.getNativeEvent().getClientY();
+
+				MenuBar popupMenuBar = new MenuBar(true);
+				// System.out.println("A");
+				event.preventDefault();
+				// event.stopPropagation();
+				final PopupPanel popup = new PopupPanel(true);
+				popup.add(popupMenuBar);
+				popupMenuBar.addItem(new MenuItem("test1",
+						new ScheduledCommand() {
+							public void execute() {
+								System.out.println("test1 pressed");
+								popup.hide(true);
+							};
+						}));
+				popupMenuBar.addItem(new MenuItem("test2",
+						new ScheduledCommand() {
+							public void execute() {
+								System.out.println("test2 pressed");
+								popup.hide(true);
+							};
+						}));
+				// popupMenuBar.addItem(new MenuItem("test2"));
+				// popup.add(new Button("Test2"));
+				popup.setPopupPosition(x, y);
+				popup.show();
+			}
+
+		}, ContextMenuEvent.getType());
+		// onlabel.getElement().add
 
 		// //dragController.makeDraggable(panel, onlabel);
 		// onlabel.addDoubleClickHandler(new DoubleClickHandler() {
@@ -233,7 +281,73 @@ public class Sandbox implements EntryPoint {
 		// }
 		// });
 
-		pickupDragController.makeDraggable(panel, dragpart);
+		// pickupDragController.makeDraggable(panel, dragpart);
+		onlabel.addDomHandler(new ClickHandler() {
+
+			@Override
+			public void onClick(ClickEvent event) {
+				System.out.println("AAA");
+			}
+		}, ClickEvent.getType());
+
+		// onlabel.addMouseUpHandler(new MouseUpHandler() {
+		//
+		// @Override
+		// public void onMouseUp(MouseUpEvent event) {
+		// int button = event.getNativeButton();
+		// if (button == NativeEvent.BUTTON_LEFT) {
+		// event.preventDefault();
+		// event.stopPropagation();
+		// openWindow(pickupDragController);
+		// }
+		// }
+		// });
+
+		pickupDragController.makeDraggable(panel, onlabel);
+
+		class A implements MouseUpHandler, MouseDownHandler, MouseMoveHandler {
+			int x;
+			int y;
+
+			@Override
+			public void onMouseDown(MouseDownEvent event) {
+				System.out.println("down");
+				x = event.getClientX();
+				y = event.getClientY();
+				// click = true;
+			}
+
+			@Override
+			public void onMouseMove(MouseMoveEvent event) {
+				// System.out.println("move");
+				// click = false;
+			}
+
+			@Override
+			public void onMouseUp(MouseUpEvent event) {
+				System.out.println("up");
+				boolean click = event.getClientX() == x && event.getClientY() == y;
+				System.out.println(click);
+				int button = event.getNativeButton();
+				if (button == NativeEvent.BUTTON_LEFT && click) {
+					event.preventDefault();
+					event.stopPropagation();
+					openWindow(pickupDragController);
+				}
+			}
+		}
+		A mouseHandler = new A();
+		onlabel.addMouseUpHandler(mouseHandler);
+		onlabel.addMouseMoveHandler(mouseHandler);
+		onlabel.addMouseDownHandler(mouseHandler);
+
+		// onlabel.addMouseDownHandler(new MouseDownHandler() {
+		//
+		// @Override
+		// public void onMouseDown(MouseDownEvent event) {
+		// System.out.println("CD");
+		// }
+		// });
 
 		Label label = new Label("hoge");
 		// panel.add(label);

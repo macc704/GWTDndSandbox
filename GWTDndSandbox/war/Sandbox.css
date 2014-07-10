@@ -33,13 +33,11 @@ h1 {
   margin: 15px 6px 6px;
 }
 
-/*
 .dragdrop-selected {
 	filter: none;
 	opacity: 1.0;
-	border-type: solid;
-	border-width: 5px;
-}*/
+	outline: solid 2px #000000;
+}
 
 /*.dragdrop-selected,.dragdrop-dragging,.dragdrop-proxy {
 	filter: alpha(opacity \= 30);
