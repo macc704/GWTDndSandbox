@@ -9,6 +9,12 @@ import matsuzawalab.kf.client.a.WindowController;
 import matsuzawalab.kf.client.a.WindowExample;
 import matsuzawalab.kf.client.a.WindowPanel;
 
+import org.vectomatic.dnd.DataTransferExt;
+import org.vectomatic.file.File;
+import org.vectomatic.file.FileReader;
+import org.vectomatic.file.events.LoadEndEvent;
+import org.vectomatic.file.events.LoadEndHandler;
+
 import com.allen_sauer.gwt.dnd.client.DragEndEvent;
 import com.allen_sauer.gwt.dnd.client.DragHandler;
 import com.allen_sauer.gwt.dnd.client.DragStartEvent;
@@ -27,6 +33,14 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.ContextMenuEvent;
 import com.google.gwt.event.dom.client.ContextMenuHandler;
+import com.google.gwt.event.dom.client.DragEnterEvent;
+import com.google.gwt.event.dom.client.DragEnterHandler;
+import com.google.gwt.event.dom.client.DragLeaveEvent;
+import com.google.gwt.event.dom.client.DragLeaveHandler;
+import com.google.gwt.event.dom.client.DragOverEvent;
+import com.google.gwt.event.dom.client.DragOverHandler;
+import com.google.gwt.event.dom.client.DropEvent;
+import com.google.gwt.event.dom.client.DropHandler;
 import com.google.gwt.event.dom.client.MouseDownEvent;
 import com.google.gwt.event.dom.client.MouseDownHandler;
 import com.google.gwt.event.dom.client.MouseMoveEvent;
@@ -103,6 +117,81 @@ public class Sandbox implements EntryPoint {
 	}
 
 	public void onModuleLoad2() {
+		boundaryPanel.addDomHandler(new DragEnterHandler() {
+			@Override
+			public void onDragEnter(DragEnterEvent event) {
+				// System.out.println("hoge");
+			}
+		}, DragEnterEvent.getType());
+		boundaryPanel.addDomHandler(new DragLeaveHandler() {
+			@Override
+			public void onDragLeave(DragLeaveEvent event) {
+				// System.out.println(event.getDataTransfer());
+				// System.out.println("leave");
+			}
+		}, DragLeaveEvent.getType());
+		// boundaryPanel.addDomHandler(new DropH
+		boundaryPanel.addDomHandler(new DragOverHandler() {
+			@Override
+			public void onDragOver(DragOverEvent event) {
+			}
+		}, DragOverEvent.getType());
+		boundaryPanel.addDomHandler(new DropHandler() {
+			@Override
+			public void onDrop(DropEvent event) {
+				// System.out.println("hoge2");
+				// stop default behaviour
+				event.preventDefault();
+				event.stopPropagation();
+
+				System.out.println("get!");
+				try {
+					System.out.println(event.getDataTransfer().getData(
+							"url"));
+					System.out.println(event.getDataTransfer().getData(
+							"text/uri-list"));
+					System.out.println(event.getDataTransfer().getData(
+							"text"));
+					//Window.open(url, name, features);
+					String text = event.getDataTransfer().getData(
+							"text/plain");
+					System.out.println(text);
+					System.out.println(event.getDataTransfer().getData(
+							"text/html"));
+					// System.out.println(event.getDataTransfer().getData(
+					// "application/x-url"));
+					// System.out.println(event.getDataTransfer().getData(
+					// "text/url"));
+					// System.out.println(event.getDataTransfer().getData(
+					// "text/x-url"));
+					DataTransferExt ext = event.getDataTransfer()
+							.<DataTransferExt> cast();
+					// int typelen = ext.getTypes().length();
+					// System.out.println(typelen);
+					// System.out.println(ext.getTypes().item(0));
+					// type note implemented in Chrome
+					int len = ext.getFiles().getLength();
+					if (len != 1) {
+						return;
+					}
+
+					File f = ext.getFiles().getItem(0);
+					System.out.println(f.getName());
+					System.out.println(f.getType());
+					final FileReader reader = new FileReader();
+					reader.addLoadEndHandler(new LoadEndHandler() {
+						@Override
+						public void onLoadEnd(LoadEndEvent event) {
+							String text = reader.getStringResult();
+							// System.out.println(text);
+						}
+					});
+					reader.readAsText(f, "UTF-8");
+				} catch (Exception ex) {
+					ex.printStackTrace();
+				}
+			}
+		}, DropEvent.getType());
 
 		final List<Widget> registered = new ArrayList<Widget>();
 
@@ -320,6 +409,7 @@ public class Sandbox implements EntryPoint {
 				System.out.println("down");
 				x = event.getClientX();
 				y = event.getClientY();
+				event.stopPropagation();
 				// click = true;
 			}
 
@@ -356,6 +446,25 @@ public class Sandbox implements EntryPoint {
 		// }
 		// });
 
+		// droppanel test
+		// DropPanel dropPanel = new DropPanel();
+		// dropPanel.getElement().getStyle().setBorderStyle(BorderStyle.SOLID);
+		// dropPanel.getElement().getStyle().setBorderWidth(2, Unit.PX);
+		// dropPanel.setSize("100px", "100px");
+		// boundaryPanel.add(dropPanel, 0, 100);
+		// dropPanel.addDropHandler(new DropHandler() {
+		//
+		// @Override
+		// public void onDrop(DropEvent event) {
+		// System.out.println("eat!");
+		// System.out
+		// .println(event.getDataTransfer().getClass().getName());
+		// DataTransferExt ext = (DataTransferExt) event.getDataTransfer();
+		// System.out.println(ext);
+		// System.out.println(ext.getTypes());
+		// }
+		// });
+
 		Label label = new Label("hoge");
 		// panel.add(label);
 		// boundaryPanel.add(panel, 100, 100);
@@ -389,31 +498,30 @@ public class Sandbox implements EntryPoint {
 	protected void openWindow(PickupDragController pickupDragController) {
 		openWindow3(pickupDragController);
 	}
-	
+
 	protected void openWindow3(PickupDragController pickupDragController) {
 		HTML html1 = new HTML(makeText().replaceAll("\n", "<br>\n"));
 		html1.addStyleName("demo-resize-html");
-		WindowPanel windowPanel1 = new WindowPanel(windowController, "abcde this is title",
-				html1, true, pickupDragController);
+		WindowPanel windowPanel1 = new WindowPanel(windowController,
+				"abcde this is title", html1, true, pickupDragController);
 		boundaryPanel.add(windowPanel1, 20, 20);
 	}
 
 	protected void openWindow2(PickupDragController pickupDragController) {
 
 		FocusPanel header1 = new FocusPanel();
-		Grid grid = new Grid(1, 2);		
+		Grid grid = new Grid(1, 2);
 		header1.add(grid);
-		
+
 		Label l = new Label("long title long title ");
 		l.getElement().getStyle().setOverflow(Overflow.HIDDEN);
 		grid.setWidget(0, 0, l);
-		
+
 		Button b = new Button("x");
 		b.setSize("23px", "23px");
 		grid.setWidget(0, 1, b);
 		grid.getColumnFormatter().setWidth(0, "100%");
-		
-		
+
 		HTML html1 = new HTML(makeText().replaceAll("\n", "<br>\n"));
 		html1.addStyleName("demo-resize-html");
 		WindowPanel windowPanel1 = new WindowPanel(windowController, header1,
