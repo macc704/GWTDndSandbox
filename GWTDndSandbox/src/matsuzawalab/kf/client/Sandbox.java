@@ -29,14 +29,11 @@ public class Sandbox implements EntryPoint {
 		RootPanel mainPanel = RootPanel.get("mainpanel");
 		mainPanel.getElement().setInnerHTML("hello! dnd demo!");
 
-		AbsolutePanel boundaryBasePanel = new AbsolutePanel();
-		boundaryBasePanel.addStyleName("demo-main-boundary-panel");
-		mainPanel.add(boundaryBasePanel);
-
 		AbsolutePanel boundaryPanel = new AbsolutePanel();
 		boundaryPanel.addStyleName("demo-WindowExample");
+		boundaryPanel.addStyleName("demo-main-boundary-panel");
 		boundaryPanel.setPixelSize(600, 400);
-		boundaryBasePanel.add(boundaryPanel);
+		mainPanel.add(boundaryPanel);
 
 		pickupDragController = new KFPickupDragController(boundaryPanel);
 		KFSelectionManager selectionManager = new KFSelectionManager();
