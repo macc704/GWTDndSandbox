@@ -5,6 +5,7 @@ import matsuzawalab.kf.client.b.IKExternalObjectDropHandler;
 import matsuzawalab.kf.client.b.KFDataTransfer;
 import matsuzawalab.kf.client.b.KFExternalObjectDropController;
 import matsuzawalab.kf.client.b.KFLabel;
+import matsuzawalab.kf.client.b.KFPickupDragController;
 import matsuzawalab.kf.client.b.KFSelectionManager;
 
 import org.vectomatic.file.File;
@@ -12,7 +13,6 @@ import org.vectomatic.file.FileReader;
 import org.vectomatic.file.events.LoadEndEvent;
 import org.vectomatic.file.events.LoadEndHandler;
 
-import com.allen_sauer.gwt.dnd.client.PickupDragController;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.user.client.ui.AbsolutePanel;
 import com.google.gwt.user.client.ui.RootPanel;
@@ -23,7 +23,7 @@ import com.google.gwt.user.client.ui.SimplePanel;
  */
 public class Sandbox implements EntryPoint {
 
-	private PickupDragController pickupDragController;
+	private KFPickupDragController pickupDragController;
 	private WindowController windowController;
 
 	public void onModuleLoad() {
@@ -43,7 +43,7 @@ public class Sandbox implements EntryPoint {
 		boundaryPanel.setPixelSize(600, 400);
 		panel.add(boundaryPanel);
 
-		pickupDragController = new PickupDragController(boundaryPanel, true);
+		pickupDragController = new KFPickupDragController(boundaryPanel);
 		KFSelectionManager selectionManager = new KFSelectionManager();
 		selectionManager.makeMultipleSelection(pickupDragController);
 
