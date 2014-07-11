@@ -38,13 +38,16 @@ public class Sandbox implements EntryPoint {
 		pickupDragController = new KFPickupDragController(boundaryPanel);
 		KFSelectionManager selectionManager = new KFSelectionManager();
 		selectionManager.makeMultipleSelection(pickupDragController);
-
 		windowController = new WindowController(boundaryPanel);
 
 		addLabel("hoge1", makeText(), 100, 100);
 		addLabel("hoge2", makeText(), 200, 200);
 		addLabel("hoge3", makeText(), 300, 300);
 
+		initializeExternalDrop(boundaryPanel);
+	}
+
+	private void initializeExternalDrop(AbsolutePanel boundaryPanel) {
 		KFExternalObjectDropController exDropHandler = new KFExternalObjectDropController();
 		exDropHandler.setDroppable(boundaryPanel,
 				new IKExternalObjectDropHandler() {
