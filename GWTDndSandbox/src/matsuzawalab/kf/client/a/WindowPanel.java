@@ -190,7 +190,7 @@ final public class WindowPanel extends FocusPanel {
 		Grid grid = new Grid(1, 2);
 		this.headerWidget = grid;
 
-		Label l = new Label("long title long title ");
+		Label l = new Label(title);
 		l.getElement().getStyle().setOverflow(Overflow.HIDDEN);
 		grid.setWidget(0, 0, l);
 

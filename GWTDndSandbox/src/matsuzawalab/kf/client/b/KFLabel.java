@@ -28,8 +28,13 @@ public class KFLabel extends SimplePanel {
 	private FocusPanel handlePanel;
 	private AbsolutePanel mainPanel;
 	private HTML titleWidget;
+	private String title;
+	private String content;
 
-	public KFLabel(String title) {
+	public KFLabel(String title, String content) {
+		this.title = title;
+		this.content = content;
+
 		handlePanel = new FocusPanel();
 		this.setWidget(handlePanel);
 		mainPanel = new AbsolutePanel();
@@ -68,7 +73,9 @@ public class KFLabel extends SimplePanel {
 				popupMenuBar.addItem(new MenuItem("open in window",
 						new ScheduledCommand() {
 							public void execute() {
-								Window.open("http://www.google.co.jp", "_blank", "width=640, height=480, resizable");
+								Window.open("http://www.google.co.jp",
+										"_blank",
+										"width=640, height=480, resizable");
 								popup.hide(true);
 							};
 						}));
@@ -156,18 +163,12 @@ public class KFLabel extends SimplePanel {
 
 	private void openWindow(final WindowController windowController,
 			final PickupDragController pickupDragController) {
-		HTML html1 = new HTML(makeText().replaceAll("\n", "<br>\n"));
+		HTML html1 = new HTML(content.replaceAll("\n", "<br>\n"));
 		html1.addStyleName("demo-resize-html");
-		WindowPanel windowPanel1 = new WindowPanel(windowController,
-				"abcde this is title", html1, true, pickupDragController);
+		WindowPanel windowPanel1 = new WindowPanel(windowController, title,
+				html1, true, pickupDragController);
+		//windowPanel1.setContentSize(300, 200);
 		pickupDragController.getBoundaryPanel().add(windowPanel1, 20, 20);
 	}
 
-	private String makeText() {
-		String t = "You can resize this panel by any of the four edges or corners.\n";
-		for (int i = 0; i < 3; i++) {
-			t += "The quick brown fox jumped over the lazy dog.\n";
-		}
-		return t;
-	}
 }

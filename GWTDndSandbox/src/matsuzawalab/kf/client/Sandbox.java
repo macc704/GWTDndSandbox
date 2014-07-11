@@ -1,8 +1,16 @@
 package matsuzawalab.kf.client;
 
 import matsuzawalab.kf.client.a.WindowController;
+import matsuzawalab.kf.client.b.IKExternalObjectDropHandler;
+import matsuzawalab.kf.client.b.KFDataTransfer;
+import matsuzawalab.kf.client.b.KFExternalObjectDropController;
 import matsuzawalab.kf.client.b.KFLabel;
 import matsuzawalab.kf.client.b.KFSelectionManager;
+
+import org.vectomatic.file.File;
+import org.vectomatic.file.FileReader;
+import org.vectomatic.file.events.LoadEndEvent;
+import org.vectomatic.file.events.LoadEndHandler;
 
 import com.allen_sauer.gwt.dnd.client.PickupDragController;
 import com.google.gwt.core.client.EntryPoint;
@@ -41,16 +49,64 @@ public class Sandbox implements EntryPoint {
 
 		windowController = new WindowController(boundaryPanel);
 
-		addLabel("hoge1", 100, 100);
-		addLabel("hoge2", 200, 200);
-		addLabel("hoge3", 300, 300);
+		addLabel("hoge1", makeText(), 100, 100);
+		addLabel("hoge2", makeText(), 200, 200);
+		addLabel("hoge3", makeText(), 300, 300);
+
+		KFExternalObjectDropController exDropHandler = new KFExternalObjectDropController();
+		exDropHandler.setDroppable(boundaryPanel,
+				new IKExternalObjectDropHandler() {
+
+					@Override
+					public boolean isAcceptable(KFDataTransfer dataTransfer) {
+						return true;
+					}
+
+					@Override
+					public void dropped(KFDataTransfer dataTransfer,
+							final int x, final int y) {
+						if (dataTransfer.hasUrllist()) {
+							addLabel("URL", dataTransfer.getUrllist(), x, y);
+						}
+
+						if (dataTransfer.hasFiles("text/plain")) {
+							for (final File f : dataTransfer.getFiles()) {
+								final FileReader reader = new FileReader();
+								reader.addLoadEndHandler(new LoadEndHandler() {
+									@Override
+									public void onLoadEnd(LoadEndEvent event) {
+										String name = f.getName();
+										String text = reader.getStringResult();
+										addLabel(name, text, x, y);
+									}
+								});
+								reader.readAsText(f, "UTF-8");
+							}
+						}
+
+						if (dataTransfer.hasFiles("application/pdf")) {
+							for (File f : dataTransfer.getFiles()) {
+								System.out.println(f.getName());
+								System.out.println(f.getType());
+							}
+						}
+					}
+				});
 	}
 
-	public void addLabel(String title, int x, int y) {
+	public void addLabel(String title, String content, int x, int y) {
 		AbsolutePanel boundaryPanel = pickupDragController.getBoundaryPanel();
-		KFLabel label = new KFLabel(title);
+		KFLabel label = new KFLabel(title, content);
 		label.bindEvents(windowController, pickupDragController);
 		boundaryPanel.add(label, x, y);
+	}
+
+	private String makeText() {
+		String t = "You can resize this panel by any of the four edges or corners.\n";
+		for (int i = 0; i < 3; i++) {
+			t += "The quick brown fox jumped over the lazy dog.\n";
+		}
+		return t;
 	}
 
 }
