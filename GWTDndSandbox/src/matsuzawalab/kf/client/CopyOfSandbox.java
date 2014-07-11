@@ -3,10 +3,7 @@ package matsuzawalab.kf.client;
 import java.util.ArrayList;
 import java.util.List;
 
-import matsuzawalab.kf.client.a.DemoDragHandler;
-import matsuzawalab.kf.client.a.DraggableFactory;
 import matsuzawalab.kf.client.a.WindowController;
-import matsuzawalab.kf.client.a.WindowExample;
 import matsuzawalab.kf.client.a.WindowPanel;
 import matsuzawalab.kf.client.b.KFSelectionManager;
 
@@ -121,9 +118,9 @@ public class CopyOfSandbox implements EntryPoint {
 		// boundaryPanel, true);
 		// dragController.setBehaviorMultipleSelection(false);
 		//
-		WindowExample example = new WindowExample(new DemoDragHandler(
-				new HTML()));
-		boundaryBasePanel.add(example);
+		//WindowExample example = new WindowExample(new DemoDragHandler(
+		//		new HTML()));
+		//boundaryBasePanel.add(example);
 	}
 
 	@SuppressWarnings("unused")
@@ -490,8 +487,8 @@ public class CopyOfSandbox implements EntryPoint {
 		// });
 
 		// demoDragHandler.
-		Widget w = DraggableFactory.createDraggableRedBox(pickupDragController);
-		boundaryPanel.add(w, 100, 50);
+		//Widget w = DraggableFactory.createDraggableRedBox(pickupDragController);
+		//boundaryPanel.add(w, 100, 50);
 
 		HTML html = new HTML("<html><body>hoge</body></html>");
 		html.setSize("100px", "27px");
