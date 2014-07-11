@@ -16,7 +16,6 @@ import org.vectomatic.file.events.LoadEndHandler;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.user.client.ui.AbsolutePanel;
 import com.google.gwt.user.client.ui.RootPanel;
-import com.google.gwt.user.client.ui.SimplePanel;
 
 /**
  * Entry point classes define <code>onModuleLoad()</code>.
@@ -34,14 +33,10 @@ public class Sandbox implements EntryPoint {
 		boundaryBasePanel.addStyleName("demo-main-boundary-panel");
 		mainPanel.add(boundaryBasePanel);
 
-		SimplePanel panel = new SimplePanel();
-		panel.addStyleName("demo-WindowExample");
-		boundaryBasePanel.add(panel);
-
 		AbsolutePanel boundaryPanel = new AbsolutePanel();
 		boundaryPanel.addStyleName("demo-WindowExample");
 		boundaryPanel.setPixelSize(600, 400);
-		panel.add(boundaryPanel);
+		boundaryBasePanel.add(boundaryPanel);
 
 		pickupDragController = new KFPickupDragController(boundaryPanel);
 		KFSelectionManager selectionManager = new KFSelectionManager();
