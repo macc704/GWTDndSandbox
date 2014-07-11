@@ -45,6 +45,10 @@ h1 {
 	opacity: 1.0;
 }
 
+.dragdrop-movable-panel {
+	outline: solid 2px #000000;
+}
+
 /* surpress highlighting handles in frame */ 
 .demo-WindowExample :focus {
 	outline: none;
