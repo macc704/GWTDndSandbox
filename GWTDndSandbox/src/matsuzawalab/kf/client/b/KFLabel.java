@@ -14,6 +14,7 @@ import com.google.gwt.event.dom.client.MouseMoveEvent;
 import com.google.gwt.event.dom.client.MouseMoveHandler;
 import com.google.gwt.event.dom.client.MouseUpEvent;
 import com.google.gwt.event.dom.client.MouseUpHandler;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.AbsolutePanel;
 import com.google.gwt.user.client.ui.FocusPanel;
 import com.google.gwt.user.client.ui.HTML;
@@ -64,17 +65,17 @@ public class KFLabel extends SimplePanel {
 				event.stopPropagation();
 				final PopupPanel popup = new PopupPanel(true);
 				popup.add(popupMenuBar);
-				popupMenuBar.addItem(new MenuItem("test1",
+				popupMenuBar.addItem(new MenuItem("open in window",
 						new ScheduledCommand() {
 							public void execute() {
-								System.out.println("test1 pressed");
+								Window.open("http://www.google.co.jp", "_blank", "width=640, height=480, resizable");
 								popup.hide(true);
 							};
 						}));
-				popupMenuBar.addItem(new MenuItem("test2",
+				popupMenuBar.addItem(new MenuItem("menu2",
 						new ScheduledCommand() {
 							public void execute() {
-								System.out.println("test2 pressed");
+								System.out.println("menu2 pressed");
 								popup.hide(true);
 							};
 						}));

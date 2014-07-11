@@ -7,7 +7,6 @@ import matsuzawalab.kf.client.b.KFSelectionManager;
 import com.allen_sauer.gwt.dnd.client.PickupDragController;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.user.client.ui.AbsolutePanel;
-import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 
@@ -42,9 +41,6 @@ public class Sandbox implements EntryPoint {
 
 		windowController = new WindowController(boundaryPanel);
 
-		HTML html = new HTML("AA");
-		pickupDragController.makeDraggable(html);
-		boundaryPanel.add(html, 20,20);
 		addLabel("hoge1", 100, 100);
 		addLabel("hoge2", 200, 200);
 		addLabel("hoge3", 300, 300);
