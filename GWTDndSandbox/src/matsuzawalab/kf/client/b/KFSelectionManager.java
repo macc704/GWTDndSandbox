@@ -60,6 +60,8 @@ public class KFSelectionManager implements MouseDownHandler, MouseMoveHandler,
 			marquee.getElement().getStyle().setBorderWidth(2, Unit.PT);
 			marquee.setSize("0px", "0px");
 			boundaryPanel.add(marquee, pressX, pressY);
+			event.preventDefault();
+			event.stopPropagation();
 		}
 	}
 
@@ -76,6 +78,8 @@ public class KFSelectionManager implements MouseDownHandler, MouseMoveHandler,
 		int h = Math.abs(mouseY - pressY);
 		boundaryPanel.setWidgetPosition(marquee, x, y);
 		marquee.setSize(w + "px", h + "px");
+		event.preventDefault();
+		event.stopPropagation();
 	}
 
 	@Override
@@ -86,6 +90,8 @@ public class KFSelectionManager implements MouseDownHandler, MouseMoveHandler,
 			}
 			boundaryPanel.remove(marquee);
 			marquee = null;
+			event.preventDefault();
+			event.stopPropagation();
 		}
 	}
 
