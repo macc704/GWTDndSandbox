@@ -120,7 +120,7 @@ final public class WindowPanel extends FocusPanel {
 	public static final DirectionConstant WEST = new DirectionConstant(
 			DIRECTION_WEST, "w");
 
-	private static final int BORDER_THICKNESS = 4;
+	private static final int BORDER_THICKNESS = 5;
 
 	private static final String CSS_DEMO_RESIZE_EDGE = "demo-resize-edge";
 
@@ -297,6 +297,9 @@ final public class WindowPanel extends FocusPanel {
 	}
 
 	public void setContentSize(int width, int height) {
+		width = width > 20 ? width : 20;
+		headerWidget.setSize(width + "px", "27px");
+
 		if (width != contentWidth) {
 			contentWidth = width;
 			headerContainer.setPixelSize(contentWidth,
@@ -313,11 +316,10 @@ final public class WindowPanel extends FocusPanel {
 					+ headerHeight);
 		}
 		contentOrScrollPanelWidget.setPixelSize(contentWidth, contentHeight);
+	}
 
-		// System.out.println("resize!" + width + "," + height);
-		width = width > 20 ? width : 20;
-		headerWidget.setSize(width + "px", "27px");
-		headerWidget.setLayoutData(null);
+	public void setWindowSize(int w, int h) {
+		setContentSize(w, h - 27);
 	}
 
 	private Widget setupCell(int row, int col, DirectionConstant direction) {

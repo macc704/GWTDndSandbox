@@ -22,6 +22,7 @@ import com.google.gwt.user.client.ui.MenuBar;
 import com.google.gwt.user.client.ui.MenuItem;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
+import com.google.gwt.user.client.ui.TextArea;
 
 public class KFLabel extends SimplePanel {
 
@@ -163,12 +164,14 @@ public class KFLabel extends SimplePanel {
 
 	private void openWindow(final WindowController windowController,
 			final PickupDragController pickupDragController) {
-		HTML html1 = new HTML(content.replaceAll("\n", "<br>\n"));
+		//HTML html1 = new HTML(content.replaceAll("\n", "<br>\n"));
+		TextArea html1 = new TextArea();
+		html1.setText(content);
 		html1.addStyleName("demo-resize-html");
 		WindowPanel windowPanel1 = new WindowPanel(windowController, title,
-				html1, true, pickupDragController);
-		//windowPanel1.setContentSize(300, 200);
+				html1, false, pickupDragController);		
 		pickupDragController.getBoundaryPanel().add(windowPanel1, 20, 20);
+		windowPanel1.setWindowSize(400, 300);
 	}
 
 }
