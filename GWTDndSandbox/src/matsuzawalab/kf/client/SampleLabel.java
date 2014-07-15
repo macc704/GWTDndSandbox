@@ -1,7 +1,7 @@
-package matsuzawalab.kf.client.b;
+package matsuzawalab.kf.client;
 
-import matsuzawalab.kf.client.a.WindowController;
-import matsuzawalab.kf.client.a.WindowPanel;
+import matsuzawalab.kf.client.dndframework.KFWindowController;
+import matsuzawalab.kf.client.dndframework.KFWindowPanel;
 
 import com.allen_sauer.gwt.dnd.client.PickupDragController;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
@@ -24,7 +24,7 @@ import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.TextArea;
 
-public class KFLabel extends SimplePanel {
+public class SampleLabel extends SimplePanel {
 
 	private FocusPanel handlePanel;
 	private AbsolutePanel mainPanel;
@@ -32,7 +32,7 @@ public class KFLabel extends SimplePanel {
 	private String title;
 	private String content;
 
-	public KFLabel(String title, String content) {
+	public SampleLabel(String title, String content) {
 		this.title = title;
 		this.content = content;
 
@@ -57,7 +57,7 @@ public class KFLabel extends SimplePanel {
 		mainPanel.add(titleWidget, 20, 0);
 	}
 
-	public void bindEvents(final WindowController windowController,
+	public void bindEvents(final KFWindowController windowController,
 			final PickupDragController pickupDragController) {
 
 		this.addDomHandler(new ContextMenuHandler() {
@@ -140,7 +140,7 @@ public class KFLabel extends SimplePanel {
 									clientY, ctrlKey, altKey, shiftKey,
 									metaKey, button);
 					storedEvent.setNativeEvent(ev);
-					KFLabel.this.delegateEvent(handlePanel, storedEvent);
+					SampleLabel.this.delegateEvent(handlePanel, storedEvent);
 					storedEvent = null;
 				}
 			}
@@ -162,13 +162,13 @@ public class KFLabel extends SimplePanel {
 		titleWidget.addMouseDownHandler(mouseHandler);
 	}
 
-	private void openWindow(final WindowController windowController,
+	private void openWindow(final KFWindowController windowController,
 			final PickupDragController pickupDragController) {
 		//HTML html1 = new HTML(content.replaceAll("\n", "<br>\n"));
 		TextArea html1 = new TextArea();
 		html1.setText(content);
 		html1.addStyleName("demo-resize-html");
-		WindowPanel windowPanel1 = new WindowPanel(windowController, title,
+		KFWindowPanel windowPanel1 = new KFWindowPanel(windowController, title,
 				html1, false, pickupDragController);		
 		pickupDragController.getBoundaryPanel().add(windowPanel1, 20, 20);
 		windowPanel1.setWindowSize(400, 300);

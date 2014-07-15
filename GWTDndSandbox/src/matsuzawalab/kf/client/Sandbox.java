@@ -1,12 +1,11 @@
 package matsuzawalab.kf.client;
 
-import matsuzawalab.kf.client.a.WindowController;
-import matsuzawalab.kf.client.b.IKExternalObjectDropHandler;
-import matsuzawalab.kf.client.b.KFDataTransfer;
-import matsuzawalab.kf.client.b.KFExternalObjectDropController;
-import matsuzawalab.kf.client.b.KFLabel;
-import matsuzawalab.kf.client.b.KFPickupDragController;
-import matsuzawalab.kf.client.b.KFSelectionManager;
+import matsuzawalab.kf.client.dndframework.IKExternalObjectDropHandler;
+import matsuzawalab.kf.client.dndframework.KFDataTransfer;
+import matsuzawalab.kf.client.dndframework.KFExternalObjectDropController;
+import matsuzawalab.kf.client.dndframework.KFPickupDragController;
+import matsuzawalab.kf.client.dndframework.KFSelectionManager;
+import matsuzawalab.kf.client.dndframework.KFWindowController;
 
 import org.vectomatic.file.File;
 import org.vectomatic.file.FileReader;
@@ -23,7 +22,7 @@ import com.google.gwt.user.client.ui.RootPanel;
 public class Sandbox implements EntryPoint {
 
 	private KFPickupDragController pickupDragController;
-	private WindowController windowController;
+	private KFWindowController windowController;
 
 	public void onModuleLoad() {
 		RootPanel mainPanel = RootPanel.get("mainpanel");
@@ -38,7 +37,7 @@ public class Sandbox implements EntryPoint {
 		pickupDragController = new KFPickupDragController(boundaryPanel);
 		KFSelectionManager selectionManager = new KFSelectionManager();
 		selectionManager.makeMultipleSelection(pickupDragController);
-		windowController = new WindowController(boundaryPanel);
+		windowController = new KFWindowController(boundaryPanel);
 
 		addLabel("hoge1", makeText(), 100, 100);
 		addLabel("hoge2", makeText(), 200, 200);
@@ -91,7 +90,7 @@ public class Sandbox implements EntryPoint {
 
 	public void addLabel(String title, String content, int x, int y) {
 		AbsolutePanel boundaryPanel = pickupDragController.getBoundaryPanel();
-		KFLabel label = new KFLabel(title, content);
+		SampleLabel label = new SampleLabel(title, content);
 		label.bindEvents(windowController, pickupDragController);
 		boundaryPanel.add(label, x, y);
 	}

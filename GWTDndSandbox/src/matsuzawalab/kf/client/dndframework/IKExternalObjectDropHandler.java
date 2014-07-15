@@ -1,4 +1,4 @@
-package matsuzawalab.kf.client.b;
+package matsuzawalab.kf.client.dndframework;
 
 
 public interface IKExternalObjectDropHandler {

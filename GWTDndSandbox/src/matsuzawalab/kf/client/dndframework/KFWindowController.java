@@ -11,27 +11,27 @@
  * or implied. See the License for the specific language governing permissions and limitations under
  * the License.
  */
-package matsuzawalab.kf.client.a;
+package matsuzawalab.kf.client.dndframework;
 
 import com.allen_sauer.gwt.dnd.client.PickupDragController;
 import com.google.gwt.user.client.ui.AbsolutePanel;
 
-final public class WindowController {
+final public class KFWindowController {
 
   private final AbsolutePanel boundaryPanel;
 
   private PickupDragController pickupDragController;
 
-  private ResizeDragController resizeDragController;
+  private KFResizeDragController resizeDragController;
 
-  public WindowController(AbsolutePanel boundaryPanel) {
+  public KFWindowController(AbsolutePanel boundaryPanel) {
     this.boundaryPanel = boundaryPanel;
 
     pickupDragController = new PickupDragController(boundaryPanel, true);
     pickupDragController.setBehaviorConstrainedToBoundaryPanel(true);
     pickupDragController.setBehaviorMultipleSelection(false);
 
-    resizeDragController = new ResizeDragController(boundaryPanel);
+    resizeDragController = new KFResizeDragController(boundaryPanel);
     resizeDragController.setBehaviorConstrainedToBoundaryPanel(true);
     resizeDragController.setBehaviorMultipleSelection(false);
   }
@@ -44,7 +44,7 @@ final public class WindowController {
     return pickupDragController;
   }
 
-  public ResizeDragController getResizeDragController() {
+  public KFResizeDragController getResizeDragController() {
     return resizeDragController;
   }
 }

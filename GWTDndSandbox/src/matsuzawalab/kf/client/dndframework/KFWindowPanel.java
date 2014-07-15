@@ -11,7 +11,7 @@
  * or implied. See the License for the specific language governing permissions and limitations under
  * the License.
  */
-package matsuzawalab.kf.client.a;
+package matsuzawalab.kf.client.dndframework;
 
 import com.allen_sauer.gwt.dnd.client.DragContext;
 import com.allen_sauer.gwt.dnd.client.PickupDragController;
@@ -34,11 +34,11 @@ import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
-final public class WindowPanel extends FocusPanel {
+final public class KFWindowPanel extends FocusPanel {
 
 	/**
 	 * WindowPanel direction constant, used in
-	 * {@link ResizeDragController#makeDraggable(Widget, DirectionConstant)}.
+	 * {@link KFResizeDragController#makeDraggable(Widget, DirectionConstant)}.
 	 */
 	public static class DirectionConstant {
 
@@ -150,15 +150,16 @@ final public class WindowPanel extends FocusPanel {
 
 	private Widget westWidget;
 
-	private WindowController windowController;
+	private KFWindowController windowController;
 
-	public WindowPanel(WindowController windowController, Widget headerWidget,
-			Widget contentWidget, boolean wrapContentInScrollPanel,
+	public KFWindowPanel(KFWindowController windowController,
+			Widget headerWidget, Widget contentWidget,
+			boolean wrapContentInScrollPanel,
 			final PickupDragController pickupDragController) {
 		throw new RuntimeException("not implemented");
 	}
 
-	public WindowPanel(WindowController windowController, String title,
+	public KFWindowPanel(KFWindowController windowController, String title,
 			Widget contentWidget, boolean wrapContentInScrollPanel,
 			final PickupDragController pickupDragController) {
 
@@ -209,7 +210,7 @@ final public class WindowPanel extends FocusPanel {
 		b.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				WindowPanel.this.removeFromParent();
+				KFWindowPanel.this.removeFromParent();
 				pickupDragController.unregisterDropController(drop);
 			}
 		});
@@ -220,13 +221,14 @@ final public class WindowPanel extends FocusPanel {
 				wrapContentInScrollPanel);
 	}
 
-	public WindowPanel(WindowController windowController, Widget headerWidget,
-			Widget contentWidget, boolean wrapContentInScrollPanel) {
+	public KFWindowPanel(KFWindowController windowController,
+			Widget headerWidget, Widget contentWidget,
+			boolean wrapContentInScrollPanel) {
 		initialize(windowController, headerWidget, contentWidget,
 				wrapContentInScrollPanel);
 	}
 
-	private void initialize(final WindowController windowController,
+	private void initialize(final KFWindowController windowController,
 			Widget headerWidget, Widget contentWidget,
 			boolean wrapContentInScrollPanel) {
 		this.windowController = windowController;
@@ -248,12 +250,12 @@ final public class WindowPanel extends FocusPanel {
 			public void onClick(ClickEvent event) {
 				AbsolutePanel boundaryPanel = windowController
 						.getBoundaryPanel();
-				if (boundaryPanel.getWidgetIndex(WindowPanel.this) < boundaryPanel
+				if (boundaryPanel.getWidgetIndex(KFWindowPanel.this) < boundaryPanel
 						.getWidgetCount() - 1) {
 					// force our panel to the top of our z-index context
 					WidgetLocation location = new WidgetLocation(
-							WindowPanel.this, boundaryPanel);
-					boundaryPanel.add(WindowPanel.this, location.getLeft(),
+							KFWindowPanel.this, boundaryPanel);
+					boundaryPanel.add(KFWindowPanel.this, location.getLeft(),
 							location.getTop());
 				}
 			}

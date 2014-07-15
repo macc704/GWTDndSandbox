@@ -1,4 +1,4 @@
-package matsuzawalab.kf.client.b;
+package matsuzawalab.kf.client.dndframework;
 
 import com.google.gwt.dom.client.ImageElement;
 import com.google.gwt.event.dom.client.DragEnterEvent;
