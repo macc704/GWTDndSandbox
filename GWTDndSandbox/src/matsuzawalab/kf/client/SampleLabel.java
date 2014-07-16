@@ -25,7 +25,6 @@ import com.google.gwt.user.client.ui.MenuItem;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.TextArea;
-import com.google.gwt.user.client.ui.Widget;
 
 public class SampleLabel extends SimplePanel {
 
@@ -167,33 +166,17 @@ public class SampleLabel extends SimplePanel {
 
 	private void openWindow(final KFWindowController windowController,
 			final PickupDragController pickupDragController) {
-		// HTML html1 = new HTML(content.replaceAll("\n", "<br>\n"));
-		TinyMCE html1 = new TinyMCE();
+		openTinyMCEWindow(windowController, pickupDragController);
 
-		// html1.addDragStartHandler(new DragStartHandler() {
-		//
-		// @Override
-		// public void onDragStart(DragStartEvent event) {
-		// String dragString = event.getDataTransfer().getData(
-		// "text/plain");
-		// event.getDataTransfer().setData("text/plain",
-		// "\"" + dragString + "\"");
-		// // String dragString =
-		// // event.getDataTransfer().getData("text/html");
-		// System.out.println("start=" + dragString);
-		// }
-		// });
+	}
 
-		// Frame iframe = new Frame();
-		// iframe.setUrl(content);
-
-		// TextArea are = new TextArea();
-		Widget widget = html1;
+	private void openTinyMCEWindow(final KFWindowController windowController,
+			final PickupDragController pickupDragController) {
+		TinyMCE html1 = new TinyMCE(content);
 		KFWindowPanel windowPanel1 = new KFWindowPanel(windowController, title,
-				widget, false, pickupDragController);
+				html1, false, pickupDragController);
 		pickupDragController.getBoundaryPanel().add(windowPanel1, 20, 20);
 		windowPanel1.setWindowSize(400, 300);
-
 	}
 
 	@SuppressWarnings("unused")

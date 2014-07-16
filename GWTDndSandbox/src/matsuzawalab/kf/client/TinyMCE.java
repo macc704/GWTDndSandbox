@@ -1,16 +1,9 @@
 package matsuzawalab.kf.client;
 
-import com.gargoylesoftware.htmlunit.javascript.host.Event;
-import com.google.gwt.dom.client.Element;
-import com.google.gwt.dom.client.IFrameElement;
-import com.google.gwt.event.dom.client.DragStartEvent;
-import com.google.gwt.event.dom.client.DragStartHandler;
 import com.google.gwt.event.logical.shared.AttachEvent;
-import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.TextArea;
-import com.google.gwt.user.client.ui.VerticalPanel;
 
 /**
  * TinyMCE -
@@ -25,105 +18,31 @@ public class TinyMCE extends SimplePanel {
 	private TextArea ta;
 	private String id;
 
-	public TinyMCE() {
-		initTinyMCE();
-		// initWidget(initTinyMCE());
+	public TinyMCE(String initialContent) {
+		initTinyMCE(initialContent);
 	}
 
-	private VerticalPanel initTinyMCE() {
-		// int width = 65;
-		// int height = 30;
-		// VerticalPanel panel = new VerticalPanel();
-		// panel.setWidth("100%");
-		addHandler(new DragStartHandler() {
-
-			@Override
-			public void onDragStart(DragStartEvent event) {
-				// TODO Auto-generated method stub
-				System.out.println("drag start!");
-			}
-		}, DragStartEvent.getType());
-		sinkEvents(Event.DRAGDROP);
+	private void initTinyMCE(String initialContent) {
 
 		id = HTMLPanel.createUniqueId();
 		ta = new TextArea();
+		ta.setText(initialContent);
 		// ta.setCharacterWidth(width);
 		// ta.setVisibleLines(height);
 		ta.getElement().setId(id);
-		ta.setText("hogehoge");
-		ta.addDragStartHandler(new DragStartHandler() {
-
-			@Override
-			public void onDragStart(DragStartEvent event) {
-				System.out.println("drag start2!");
-			}
-		});
-		// DOM.setElementAttribute(ta.getElement(), "id", id);
-		// DOM.setStyleAttribute(ta.getElement(), "width", "100%");
-		// DOM.setStyleAttribute(ta.getElement(), "height", "100px");
-		// DOM.setStyleAttribute(ta.getElement(), "height", "250px"); // delete
-		// line?
 		setWidget(ta);
+		
 		this.addAttachHandler(new AttachEvent.Handler() {
-
 			@Override
 			public void onAttachOrDetach(AttachEvent event) {
-				// DOM.getElementById(DEBUG_ID_PREFIX)
-				// System.out.println("aa" + event.isAttached());
 				if (!event.isAttached()) {// detach
-
-					// html = iframe().getContentDocument().getNodeValue();
 					removeMCE(id);
-					// // saved = getText();
-					// html = iframe().getInnerHTML();
 				} else {
-					// if(html != null){
-					// //iframe().getContentDocument().setNodeValue(html);
-					// }
 					init(id);
-					// BodyElement body =
-					// iframe().getContentDocument().getBody();
-
-					// iframe().setInnerHTML("<html><body>this is body<body></html>");
-					// // Frame frame = Frame.wrap(iframe());
-					// System.out.println(iframe());
-					// //System.out.println("attach" + iframe().getInnerHTML());
-					// System.out.println("attach" +
-					// iframe().getContentDocument().getBody());
-					// System.out.println("attach" + ;
-					// // frame.addHandler(new DragStartHandler() {
-					//
-					// @Override
-					// public void onDragStart(DragStartEvent event) {
-					// // TODO Auto-generated method stub
-					// System.out.println("drag start3!");
-					// }
-					// }, DragStartEvent.getType());
-					// frame.sinkEvents(Event.DRAGDROP);
-					// atacch
-					// if(iframe().getContentDocument() == null){
-					// if(html != null){
-					// System.out.println(html);
-					// iframe().setInnerHTML(html);
-					// }
-					// }
 				}
 			}
 		});
-
-		// return panel;
-		return null;
 	}
-
-	private String html;
-
-	public IFrameElement iframe() {
-		Element iframeElem = DOM.getElementById(id + "_ifr");
-		IFrameElement iframe = (IFrameElement) iframeElem;
-		return iframe;
-	}
-
-	private String saved;
 
 	/**
 	 * getID() -
@@ -158,43 +77,6 @@ public class TinyMCE extends SimplePanel {
 	 */
 	protected void onLoad() {
 		super.onLoad();
-
-		// System.out.println("onLoad");
-		// init(id);
-		// iframe().
-		// DeferredCommand.addCommand(new Command() {
-		// public void execute() {
-		// setWidth("100%");
-		// if (!initialized) {
-		//
-		// initialized = true;
-		// }
-
-		// System.out.println(getElement());
-		// IFrameElement e = (IFrameElement) DOM.getElementById(id + "_ifr");
-		// System.out.println(e);
-
-		// NodeList<Element> elements =
-		// getElement().getElementsByTagName("body");
-		// int len = elements.getLength();
-		// System.out.println(len);
-		// for (int i = 0; i < len; i++) {
-		// Element e = elements.getItem(i);
-		// System.out.println(e);
-		// }
-
-		// initialized = true;
-		// setText("hogera");
-		// }
-
-		// if (saved != null) {
-		// // System.out.println(saved);
-		// // setText(saved);
-		// }
-		// setTextAreaToTinyMCE(id);
-		// focusMCE(id);
-		// }
-		// });
 	}
 
 	/**
