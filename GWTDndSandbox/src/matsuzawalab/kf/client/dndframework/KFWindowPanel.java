@@ -149,6 +149,8 @@ final public class KFWindowPanel extends FocusPanel {
 	private Widget southWidget;
 
 	private Widget westWidget;
+	
+	private Label titleLabel;
 
 	private KFWindowController windowController;
 
@@ -191,9 +193,9 @@ final public class KFWindowPanel extends FocusPanel {
 		Grid grid = new Grid(1, 2);
 		this.headerWidget = grid;
 
-		Label l = new Label(title);
-		l.getElement().getStyle().setOverflow(Overflow.HIDDEN);
-		grid.setWidget(0, 0, l);
+		titleLabel = new Label(title);
+		titleLabel.getElement().getStyle().setOverflow(Overflow.HIDDEN);
+		grid.setWidget(0, 0, titleLabel);
 
 		Button b = new Button("x");
 		b.setSize("23px", "23px");
@@ -219,6 +221,10 @@ final public class KFWindowPanel extends FocusPanel {
 
 		initialize(windowController, grid, contentWidget,
 				wrapContentInScrollPanel);
+	}
+	
+	public void setWindowTitle(String title){
+		titleLabel.setText(title);
 	}
 
 	public KFWindowPanel(KFWindowController windowController,

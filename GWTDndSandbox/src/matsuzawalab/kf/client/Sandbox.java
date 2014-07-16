@@ -97,9 +97,9 @@ public class Sandbox implements EntryPoint {
 	}
 
 	private String makeText() {
-		String t = "You can resize this panel by any of the four edges or corners.\n";
+		String t = "You can <a href='http://www.google.ca/'>click me</a>resize this panel by any of the four edges or corners.\n";
 		for (int i = 0; i < 3; i++) {
-			t += "The quick brown fox jumped over the lazy dog.\n";
+			t += "The quick brown fox <a href='http://www.utoronto.ca/'>utoronto</a>jumped over the lazy dog.\n";
 		}
 		return t;
 	}

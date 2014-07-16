@@ -1,5 +1,7 @@
 package matsuzawalab.kf.client;
 
+import matsuzawalab.kf.client.dndframework.IKFEditorChangeHandler;
+import matsuzawalab.kf.client.dndframework.KFTinyMCEWidget;
 import matsuzawalab.kf.client.dndframework.KFWindowController;
 import matsuzawalab.kf.client.dndframework.KFWindowPanel;
 
@@ -172,9 +174,21 @@ public class SampleLabel extends SimplePanel {
 
 	private void openTinyMCEWindow(final KFWindowController windowController,
 			final PickupDragController pickupDragController) {
-		TinyMCE html1 = new TinyMCE(content);
-		KFWindowPanel windowPanel1 = new KFWindowPanel(windowController, title,
+		final KFTinyMCEWidget html1 = new KFTinyMCEWidget(content);
+		final KFWindowPanel windowPanel1 = new KFWindowPanel(windowController, title,
 				html1, false, pickupDragController);
+		html1.setChangeHandler(new IKFEditorChangeHandler() {
+
+			@Override
+			public void stateChanged() {
+				if (html1.isDirty()) {
+					windowPanel1.setWindowTitle(title + "*");
+				} else {
+					windowPanel1.setWindowTitle(title);
+				}
+
+			}
+		});
 		pickupDragController.getBoundaryPanel().add(windowPanel1, 20, 20);
 		windowPanel1.setWindowSize(400, 300);
 	}

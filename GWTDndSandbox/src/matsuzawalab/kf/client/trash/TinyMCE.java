@@ -1,4 +1,4 @@
-package matsuzawalab.kf.client;
+package matsuzawalab.kf.client.trash;
 
 import com.google.gwt.event.logical.shared.AttachEvent;
 import com.google.gwt.user.client.ui.HTMLPanel;
