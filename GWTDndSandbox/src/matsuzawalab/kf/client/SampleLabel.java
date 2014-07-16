@@ -8,6 +8,8 @@ import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.event.dom.client.ContextMenuEvent;
 import com.google.gwt.event.dom.client.ContextMenuHandler;
+import com.google.gwt.event.dom.client.DragStartEvent;
+import com.google.gwt.event.dom.client.DragStartHandler;
 import com.google.gwt.event.dom.client.MouseDownEvent;
 import com.google.gwt.event.dom.client.MouseDownHandler;
 import com.google.gwt.event.dom.client.MouseMoveEvent;
@@ -23,6 +25,7 @@ import com.google.gwt.user.client.ui.MenuItem;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.TextArea;
+import com.google.gwt.user.client.ui.Widget;
 
 public class SampleLabel extends SimplePanel {
 
@@ -164,14 +167,64 @@ public class SampleLabel extends SimplePanel {
 
 	private void openWindow(final KFWindowController windowController,
 			final PickupDragController pickupDragController) {
-		//HTML html1 = new HTML(content.replaceAll("\n", "<br>\n"));
+		// HTML html1 = new HTML(content.replaceAll("\n", "<br>\n"));
+		TinyMCE html1 = new TinyMCE();
+
+		// html1.addDragStartHandler(new DragStartHandler() {
+		//
+		// @Override
+		// public void onDragStart(DragStartEvent event) {
+		// String dragString = event.getDataTransfer().getData(
+		// "text/plain");
+		// event.getDataTransfer().setData("text/plain",
+		// "\"" + dragString + "\"");
+		// // String dragString =
+		// // event.getDataTransfer().getData("text/html");
+		// System.out.println("start=" + dragString);
+		// }
+		// });
+
+		// Frame iframe = new Frame();
+		// iframe.setUrl(content);
+
+		// TextArea are = new TextArea();
+		Widget widget = html1;
+		KFWindowPanel windowPanel1 = new KFWindowPanel(windowController, title,
+				widget, false, pickupDragController);
+		pickupDragController.getBoundaryPanel().add(windowPanel1, 20, 20);
+		windowPanel1.setWindowSize(400, 300);
+
+	}
+
+	@SuppressWarnings("unused")
+	private void openWindow2(final KFWindowController windowController,
+			final PickupDragController pickupDragController) {
+		// HTML html1 = new HTML(content.replaceAll("\n", "<br>\n"));
 		TextArea html1 = new TextArea();
 		html1.setText(content);
 		html1.addStyleName("demo-resize-html");
+		html1.addDragStartHandler(new DragStartHandler() {
+
+			@Override
+			public void onDragStart(DragStartEvent event) {
+				String dragString = event.getDataTransfer().getData(
+						"text/plain");
+				event.getDataTransfer().setData("text/plain",
+						"\"" + dragString + "\"");
+				// String dragString =
+				// event.getDataTransfer().getData("text/html");
+				System.out.println("start=" + dragString);
+			}
+		});
+
+		// Frame iframe = new Frame();
+		// iframe.setUrl(content);
+
 		KFWindowPanel windowPanel1 = new KFWindowPanel(windowController, title,
-				html1, false, pickupDragController);		
+				html1, false, pickupDragController);
 		pickupDragController.getBoundaryPanel().add(windowPanel1, 20, 20);
 		windowPanel1.setWindowSize(400, 300);
+
 	}
 
 }

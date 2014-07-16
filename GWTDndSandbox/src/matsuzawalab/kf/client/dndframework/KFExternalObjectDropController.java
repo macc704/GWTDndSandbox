@@ -35,6 +35,13 @@ public class KFExternalObjectDropController implements DragEnterHandler,
 	}
 
 	public void onDragEnter(DragEnterEvent event) {
+		if (handler == null) {
+			return;
+		}
+		if (!handler.isAcceptable(new KFDataTransfer(event.getDataTransfer()))) {
+			return;
+		}
+
 		event.preventDefault();
 		event.stopPropagation();
 
@@ -43,16 +50,37 @@ public class KFExternalObjectDropController implements DragEnterHandler,
 	}
 
 	public void onDragLeave(DragLeaveEvent event) {
+		if (handler == null) {
+			return;
+		}
+		if (!handler.isAcceptable(new KFDataTransfer(event.getDataTransfer()))) {
+			return;
+		}
+		
 		event.preventDefault();
 		event.stopPropagation();
 	}
 
 	public void onDragOver(DragOverEvent event) {
+		if (handler == null) {
+			return;
+		}
+		if (!handler.isAcceptable(new KFDataTransfer(event.getDataTransfer()))) {
+			return;
+		}
+		
 		event.preventDefault();
 		event.stopPropagation();
 	}
 
 	public void onDrop(DropEvent event) {
+		if (handler == null) {
+			return;
+		}
+		if (!handler.isAcceptable(new KFDataTransfer(event.getDataTransfer()))) {
+			return;
+		}
+		
 		event.preventDefault();
 		event.stopPropagation();
 
