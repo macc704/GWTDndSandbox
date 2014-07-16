@@ -31,7 +31,7 @@ public class Sandbox implements EntryPoint {
 		AbsolutePanel boundaryPanel = new AbsolutePanel();
 		boundaryPanel.addStyleName("demo-WindowExample");
 		boundaryPanel.addStyleName("demo-main-boundary-panel");
-		boundaryPanel.setPixelSize(600, 400);
+		boundaryPanel.setPixelSize(1024, 480);
 		mainPanel.add(boundaryPanel);
 
 		pickupDragController = new KFPickupDragController(boundaryPanel);
